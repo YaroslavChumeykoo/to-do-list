@@ -9,7 +9,6 @@ let task = [];
 if(localStorage.getItem('tasks')){
     task = JSON.parse(localStorage.getItem('tasks'))
 }
-console.log(task)
 task.forEach(function(element){
     addToTask(element)
 })
@@ -90,7 +89,11 @@ function saveINlocalStoradge(){
 
 function addToTask(task_el){
     if(task_el.text != ''){
-        const taskText = `<div class="task" id ='${task_el.id}'>
+        if(task_el.ready == false)
+            ready_new = 'task'
+        else
+            ready_new = 'task ready'
+        const taskText = `<div class="${ready_new}" id ='${task_el.id}'>
         <span class="text_task">${task_el.text}</span>
         <div class="but_in_task">
             <button class="task_ready">
