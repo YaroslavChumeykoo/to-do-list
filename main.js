@@ -51,7 +51,7 @@ function ready_task(event){
     else{
         task.forEach(function(element){
             if(element.id == ready.id){
-                element.ready = fa
+                element.ready = false
             }
         })
     }
