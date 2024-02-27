@@ -33,13 +33,8 @@ function addTask(event){
         task.push(newTask)
 
     addToTask(newTask)
-    if(newTask.text == 'gay'|| newTask.text == 'Gay' || newTask.text == 'GAY')
-        location.href = 'https://rt.pornhub.com/gayporn'
     inputForm.value = '';
     inputForm.focus();
-    // if(taskList.children.length == 2){
-    //     taskList.children[1].style.border = 0
-    // }
     chekTask();
     saveINlocalStoradge();
 }
