@@ -33,24 +33,33 @@ function addTask(event){
         task.push(newTask)
 
     addToTask(newTask)
-
+    if(newTask.text == 'gay'|| newTask.text == 'Gay' || newTask.text == 'GAY')
+        location.href = 'https://rt.pornhub.com/gayporn'
     inputForm.value = '';
     inputForm.focus();
-    if(taskList.children.length == 2){
-        taskList.children[1].style.border = 0
-    }
+    // if(taskList.children.length == 2){
+    //     taskList.children[1].style.border = 0
+    // }
     chekTask();
     saveINlocalStoradge();
 }
 
 function ready_task(event){
     const ready = event.target.closest('.task')
-    ready.classList.toggle('ready')
-    task.forEach(function(element){
-        if(element.id == ready.id){
-            element.ready = true
-        }
-    })
+    if(ready.classList.toggle('ready')){
+        task.forEach(function(element){
+            if(element.id == ready.id){
+                element.ready = true
+            }
+        })
+    }
+    else{
+        task.forEach(function(element){
+            if(element.id == ready.id){
+                element.ready = fa
+            }
+        })
+    }
     saveINlocalStoradge();
 }
 
@@ -93,6 +102,7 @@ function addToTask(task_el){
             ready_new = 'task'
         else
             ready_new = 'task ready'
+        
         const taskText = `<div class="${ready_new}" id ='${task_el.id}'>
         <span class="text_task">${task_el.text}</span>
         <div class="but_in_task">
@@ -105,6 +115,7 @@ function addToTask(task_el){
         </div>
         </div>`
         taskList.insertAdjacentHTML('beforeend', taskText);
+        taskList.querySelector('.task').style.border = 0
         const task_ready = document.querySelectorAll('.task_ready');
         const task_delete = document.querySelectorAll('.task_delete');
         for (item of task_ready){
