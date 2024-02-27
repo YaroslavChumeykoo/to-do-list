@@ -53,8 +53,14 @@ main{
     justify-content: space-between;
     margin-bottom: 5px;
 }
+.ready_text{
+    display: flex;
+    justify-content: start;
+    width: 80%;
+    align-items: center;
+}
 .text_task{
-    max-width: 80%;
+    max-width: 90%;
 }
 .but_in_task{
     width: 20%;
@@ -66,10 +72,10 @@ main{
     background-color: white;
     cursor: pointer;
     margin: 3px;
-    width: 50%;
+    width: 10%;
     border: 0;
 }
-.task_delete{
+.task_delete, .task_edit{
     background-color: white;
     cursor: pointer;
     margin: 3px;

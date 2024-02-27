@@ -1,10 +1,12 @@
 const form = document.querySelector('.form')
 const inputForm = document.querySelector('input')
 const taskList = document.querySelector('.list_task')
+const nameForm = document.querySelector('.name_form');
 
 form.addEventListener('submit', addTask);
 
 let task = [];
+let index = 0;
 
 if(localStorage.getItem('tasks')){
     task = JSON.parse(localStorage.getItem('tasks'))
@@ -59,7 +61,6 @@ function ready_task(event){
 }
 
 function delete_task(event){
-    console.log('удалить')
     const delet = event.target.closest('.task')
     delet.remove();
     task = task.filter((element) => element.id != delet.id)
@@ -99,10 +100,15 @@ function addToTask(task_el){
             ready_new = 'task ready'
         
         const taskText = `<div class="${ready_new}" id ='${task_el.id}'>
-        <span class="text_task">${task_el.text}</span>
-        <div class="but_in_task">
+        <div class="ready_text">
             <button class="task_ready">
                 <img src="ready.png" alt="ready">
+            </button>
+            <span class="text_task">${task_el.text}</span>
+        </div>
+        <div class="but_in_task">
+            <button class="task_edit">
+                <img src="edit.png" alt="edit">
             </button>
             <button class="task_delete">
                 <img src="delete.png" alt="ready">
@@ -113,11 +119,43 @@ function addToTask(task_el){
         taskList.querySelector('.task').style.border = 0
         const task_ready = document.querySelectorAll('.task_ready');
         const task_delete = document.querySelectorAll('.task_delete');
+        const task_edit = document.querySelectorAll('.task_edit');
         for (item of task_ready){
             item.addEventListener('click', ready_task)
         }
         for (item of task_delete){
             item.addEventListener('click', delete_task)
         }
+        for (item of task_edit){
+            item.addEventListener('click', edit_task)
+        }
     }
+}
+function edit_task(event){
+    const edit = event.target.closest('.task')
+    nameForm.innerHTML = 'Редактирование задачи'
+    inputForm.focus();
+    index = task.findIndex((element) => element.id == edit.id)
+    inputForm.value = task[index].text
+    form.removeEventListener('submit', addTask);
+    form.addEventListener('submit', addTask_edit);
+}
+
+function addTask_edit(event){
+    event.preventDefault();
+    console.log(index);
+    task[index].text = inputForm.value;
+    console.log(task)
+    const tasks = taskList.querySelectorAll(".task")
+    tasks.forEach(function(element){
+        if(element.id == task[index].id){
+            const span = element.querySelector('span')
+            span.innerHTML = inputForm.value
+        }
+    })
+    inputForm.value = ''
+    nameForm.innerHTML = 'Добавить новую задачу'
+    form.removeEventListener('submit', addTask_edit);
+    form.addEventListener('submit', addTask);
+    saveINlocalStoradge();
 }
