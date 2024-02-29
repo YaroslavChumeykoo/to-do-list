@@ -76,10 +76,10 @@ function ready_task(event){
             }
         })
     }
-    if(mode == 'filtr')
-        filtr()
-    if(mode == 'filtr_noReady')
-        filtr_noReady()
+    //  if(mode == 'filtr')
+    //      filtr()
+    //  if(mode == 'filtr_noReady')
+    //      filtr_noReady()
     saveINlocalStoradge();
 
 }
@@ -224,13 +224,17 @@ function filtr_noReady(){
     pagination_button(task_filtr_noRead)
 }
 function pagination(number_padges){
+    const pagination_but = pagination_but_all.querySelectorAll('.pagination_but')
+    pagination_but.forEach(function(element){
+        if(element.innerHTML == number_padges)
+            element.style.backgroundColor = 'red'
+        else element.style.backgroundColor = 'rgb(111, 111, 235)'
+    })
     const all_task = taskList.querySelectorAll('.task')
     all_task.forEach(function(item){
         item.classList.add('none')
     })
-    if(number_padges == 0){
-        console.log('кайф')
-    }
+    if(number_padges == 0){}
     else if(number_padges == 1){
         for(let i = 0; i < 5; i++){
             if(all_task[i])
