@@ -2,28 +2,46 @@ const form = document.querySelector('.form')
 const inputForm = document.querySelector('input')
 const taskList = document.querySelector('.list_task')
 const nameForm = document.querySelector('.name_form');
+const filter = document.querySelector('.filtr')
+const filtr_no_ready = document.querySelector('.filtr_no_ready')
+const all = document.querySelector('.all')
+const pagination_but_all = document.querySelector('.pagination_but_all')
 
 form.addEventListener('submit', addTask);
+filter.addEventListener('click',filtr);
+filtr_no_ready.addEventListener('click',filtr_noReady);
+all.addEventListener('click',take_is_LC);
 
 let task = [];
 let index = 0;
+let mode = 'all'
 
-if(localStorage.getItem('tasks')){
-    task = JSON.parse(localStorage.getItem('tasks'))
-}
-task.forEach(function(element){
+
+function take_is_LC(){
+    all.style.backgroundColor = 'red'
+    filter.style.backgroundColor = 'rgb(111, 111, 235)'
+    filtr_no_ready.style.backgroundColor = 'rgb(111, 111, 235)'
+    mode = 'all'
+    taskList.querySelectorAll('.task').forEach((element) => element.remove())
+    if(localStorage.getItem('tasks')){
+        task = JSON.parse(localStorage.getItem('tasks'))
+    }
+    task.forEach(function(element){
     addToTask(element)
-})
-chekTask();
-
+    })
+    chekTask();
+    all.innerHTML = `Все(${task.length})`
+    const task_filtr = task.filter((element) => element.ready == true)
+    filter.innerHTML = `Выполнены(${task_filtr.length})`
+    filtr_no_ready.innerHTML = `Не Выполнены(${task.length - task_filtr.length})`
+    pagination_button(task)
+    
+}
 function addTask(event){
     event.preventDefault();
-    let helper = ''
-    if(inputForm.value.length > 35){
-        helper = inputForm.value.split('')
-        helper.splice(34, 0, ' ')
-        helper = helper.join('')
-        inputForm.value = helper
+    if(inputForm.value.length > 30){
+        alert('Сука слишком длинное слово попробуй еще раз')
+        inputForm.value = ''
     }
 
     const newTask = {
@@ -34,11 +52,12 @@ function addTask(event){
     if(newTask.text != '')
         task.push(newTask)
 
-    addToTask(newTask)
     inputForm.value = '';
     inputForm.focus();
-    chekTask();
     saveINlocalStoradge();
+    take_is_LC();
+    chekTask();
+    
 }
 
 function ready_task(event){
@@ -57,7 +76,12 @@ function ready_task(event){
             }
         })
     }
+    if(mode == 'filtr')
+        filtr()
+    if(mode == 'filtr_noReady')
+        filtr_noReady()
     saveINlocalStoradge();
+
 }
 
 function delete_task(event){
@@ -66,6 +90,7 @@ function delete_task(event){
     task = task.filter((element) => element.id != delet.id)
     chekTask();
     saveINlocalStoradge();
+    take_is_LC();
 }
 
 function chekTask(){
@@ -89,6 +114,10 @@ function chekTask(){
     }
 }
 function saveINlocalStoradge(){
+    all.innerHTML = `Все(${task.length})`
+    const task_filtr = task.filter((element) => element.ready == true)
+    filtr_no_ready.innerHTML = `Не Выполнены(${task.length - task_filtr.length})`
+    filter.innerHTML = `Выполнены(${task_filtr.length})`
     localStorage.setItem('tasks', JSON.stringify(task))
 }
 
@@ -99,7 +128,7 @@ function addToTask(task_el){
         else
             ready_new = 'task ready'
         
-        const taskText = `<div class="${ready_new}" id ='${task_el.id}'>
+        const taskText = `<div class="${ready_new}" id ='${task_el.id}' >
         <div class="ready_text">
             <button class="task_ready">
                 <img src="ready.png" alt="ready">
@@ -130,6 +159,8 @@ function addToTask(task_el){
             item.addEventListener('click', edit_task)
         }
     }
+    
+    
 }
 function edit_task(event){
     const edit = event.target.closest('.task')
@@ -139,23 +170,95 @@ function edit_task(event){
     inputForm.value = task[index].text
     form.removeEventListener('submit', addTask);
     form.addEventListener('submit', addTask_edit);
+    
 }
 
 function addTask_edit(event){
+    console.log('я тут')
+    if(inputForm.value.length > 30){
+        alert('Сука слишком длинное слово попробуй еще раз')
+        inputForm.value = ''
+    }
     event.preventDefault();
-    console.log(index);
-    task[index].text = inputForm.value;
-    console.log(task)
-    const tasks = taskList.querySelectorAll(".task")
-    tasks.forEach(function(element){
-        if(element.id == task[index].id){
-            const span = element.querySelector('span')
-            span.innerHTML = inputForm.value
-        }
-    })
+    if(inputForm.value != ''){
+        task[index].text = inputForm.value;
+        const tasks = taskList.querySelectorAll(".task")
+        tasks.forEach(function(element){
+            if(element.id == task[index].id){
+                const span = element.querySelector('span')
+                span.innerHTML = inputForm.value
+            }
+        })
+    }
     inputForm.value = ''
     nameForm.innerHTML = 'Добавить новую задачу'
     form.removeEventListener('submit', addTask_edit);
     form.addEventListener('submit', addTask);
     saveINlocalStoradge();
 }
+
+function filtr(){
+    all.style.backgroundColor = 'rgb(111, 111, 235)'
+    filter.style.backgroundColor = 'red'
+    filtr_no_ready.style.backgroundColor = 'rgb(111, 111, 235)'
+    mode = 'filtr'
+    const task_filtr = task.filter((element) => element.ready == true)
+    const away_task = taskList.querySelectorAll('.task')
+    away_task.forEach((element) => element.remove())
+    task_filtr.forEach(function(element){
+        addToTask(element)
+    })
+    pagination_button(task_filtr)
+}
+function filtr_noReady(){
+    all.style.backgroundColor = 'rgb(111, 111, 235)'
+    filter.style.backgroundColor = 'rgb(111, 111, 235)'
+    filtr_no_ready.style.backgroundColor = 'red'
+    mode = 'filtr_noReady'
+    const task_filtr_noRead = task.filter((element) => element.ready == false)
+    const away_task = taskList.querySelectorAll('.task')
+    away_task.forEach((element) => element.remove())
+    task_filtr_noRead.forEach(function(element){
+        addToTask(element)
+    })
+    pagination_button(task_filtr_noRead)
+}
+function pagination(number_padges){
+    const all_task = taskList.querySelectorAll('.task')
+    all_task.forEach(function(item){
+        item.classList.add('none')
+    })
+    if(number_padges == 0){
+        console.log('кайф')
+    }
+    else if(number_padges == 1){
+        for(let i = 0; i < 5; i++){
+            if(all_task[i])
+                all_task[i].classList.remove('none')
+        }    
+    }
+    else{
+        for(let i = (5 * (number_padges - 1)); i < (5 * number_padges); i++){
+            if(all_task[i])
+                all_task[i].classList.remove('none')
+        }
+    }
+}
+function pagination_button(task_for_pag){
+    pagination_but_all.innerHTML = ''
+    let new_button = ''
+    let all_number_padges = Math.ceil(task_for_pag.length / 5)
+    for(let i = 1; i <= all_number_padges; i++){
+        new_button = `<button class="pagination_but">${i}</button>`
+        pagination_but_all.insertAdjacentHTML('beforeend', new_button);
+    }
+    if(all_number_padges == 0)
+        pagination(0);
+    else pagination(all_number_padges)
+    const pagination_but = pagination_but_all.querySelectorAll('.pagination_but')
+    for(item of pagination_but){
+        item.addEventListener('click', (event) => pagination(event.target.innerHTML));
+    }
+
+}
+take_is_LC();

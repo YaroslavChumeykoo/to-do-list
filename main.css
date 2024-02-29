@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap');
 
 *{
     padding: 0;
@@ -14,13 +14,33 @@ body{
 
 main{
     font-size: 3.5vw;
-    
+    font-family: "Inconsolata", monospace;
     width: 100vw;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+.but_control{
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+    
+}
+
+.filtr, .filtr_no_ready, .all{
+    font-size: 1.2vw;
+    margin: 5px;
+    width: 22%;
+    background-color: rgb(111, 111, 235);
+    color: white;
+    border: 0;
+    padding: 5px;
+    border-radius: 5px;
+    font-family: "Inconsolata", monospace;
+    cursor: pointer;
+}
 .name_project{
     margin: 30px;
 }
@@ -28,7 +48,6 @@ main{
 .list_task{
     font-size: 2vw;
     width: 50%;
-    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     background-color: white;
@@ -93,7 +112,7 @@ main{
 }
 
 input{
-    font-family: "Montserrat", sans-serif;
+    font-family: "Inconsolata", monospace;
     width: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -102,8 +121,7 @@ input{
 }
 
 .but_in_form{
-    font-family: "Montserrat", sans-serif;
-    border-radius: 5px;
+    font-family: "Inconsolata", monospace;
     padding: 3px;
     border: 0;
     width: 30%;
@@ -121,7 +139,14 @@ input{
     text-decoration: line-through;
 }
 
-
+.pagination_but{
+    margin: 10px 3px 10px 3px;
+    padding: 5px;
+    border: 0;
+    background-color: rgb(111, 111, 235);
+    color: white;
+    border-radius: 20%;
+}
 @media screen and (min-width: 1300px){
     main{
         font-size: 2vw;
