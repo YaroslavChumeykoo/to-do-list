@@ -20,7 +20,23 @@ main{
     flex-direction: column;
     align-items: center;
 }
-
+.all_controll{
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+}
+.all_ready, .remove_all{
+    font-size: 1.2vw;
+    margin: 5px;
+    width: 27%;
+    background-color: rgb(111, 111, 235);
+    color: white;
+    border: 0;
+    padding: 5px;
+    border-radius: 5px;
+    font-family: "Inconsolata", monospace;
+    cursor: pointer;
+}
 .but_control{
     width: 50%;
     display: flex;

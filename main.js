@@ -6,16 +6,19 @@ const filter = document.querySelector('.filtr')
 const filtr_no_ready = document.querySelector('.filtr_no_ready')
 const all = document.querySelector('.all')
 const pagination_but_all = document.querySelector('.pagination_but_all')
+const all_ready = document.querySelector('.all_ready')
+const remove_all = document.querySelector('.remove_all')
 
 form.addEventListener('submit', addTask);
 filter.addEventListener('click',filtr);
 filtr_no_ready.addEventListener('click',filtr_noReady);
 all.addEventListener('click',take_is_LC);
+all_ready.addEventListener('click', readyALL);
+remove_all.addEventListener('click', removeALL);
 
 let task = [];
 let index = 0;
 let mode = 'all'
-
 
 function take_is_LC(){
     all.style.backgroundColor = 'red'
@@ -39,17 +42,60 @@ function take_is_LC(){
 }
 function addTask(event){
     event.preventDefault();
-    if(inputForm.value.length > 30){
-        alert('Сука слишком длинное слово попробуй еще раз')
-        inputForm.value = ''
-    }
+    let validation = inputForm.value.split('')
+    let validation_finish = []
+    validation.forEach(function(element){
+         switch(element){
+             case '"':
+                 element = '&#34;';
+                 break;
+             case '№':
+                 element = '&#8470;';
+                 break;
+             case ';':
+                 element = '&#59;';
+                 break;
+             case '%':
+                 element = '&#37;';
+                 break;
+             case ':':
+                 element = '&#58;';
+                 break;
+             case '?':
+                 element = '&#63;';
+                 break;
+             case '*':
+                 element = '&#8727;';
+                 break;
+             case '<':
+                 element = '&lt;';
+                 break;
+             case '>':
+                 element = '&gt;';
+                 break;    
+         }
+         validation_finish.push(element)
+    })
 
+    if(validation_finish.length > 35){
+        for(let i = 0; i <validation_finish.length;i++){
+            if((i % 35) == 0)
+            validation_finish.splice(i,0,' ')
+        }
+    }
+    if(validation_finish.find(function(element){
+        if(element != ' ')
+            return true
+    })){}
+    else validation_finish = []
+    validation_finish = validation_finish.join('')
+    // validation = escapeHtml(validation)
     const newTask = {
         id: Date.now(),
-        text: inputForm.value,
+        text: validation_finish,
         ready: false
     }
-    if(newTask.text != '')
+    if(newTask.text != '' && newTask.text != ' ')
         task.push(newTask)
 
     inputForm.value = '';
@@ -59,6 +105,16 @@ function addTask(event){
     chekTask();
     
 }
+
+// function escapeHtml(unsafe)
+// {
+//     return unsafe
+//          .replace(/&/g, "&amp;")
+//          .replace(/</g, "&lt;")
+//          .replace(/>/g, "&gt;")
+//          .replace(/"/g, "&quot;")
+//          .replace(/'/g, "&#039;");
+//  }
 
 function ready_task(event){
     const ready = event.target.closest('.task')
@@ -76,12 +132,32 @@ function ready_task(event){
             }
         })
     }
-    //  if(mode == 'filtr')
-    //      filtr()
-    //  if(mode == 'filtr_noReady')
-    //      filtr_noReady()
     saveINlocalStoradge();
-
+    // хуйня не робит
+    if(mode == 'filtr'){
+        const ready_task = taskList.querySelectorAll('.task')
+        ready_task.forEach(function(element, index){
+            if(element.classList == 'task'){
+                element.remove()
+                if(ready_task[index + 5])
+                ready_task[index + 5].classList.remove('none')
+                else filtr()
+            }
+        })
+    }
+        
+    if(mode === 'filtr_noReady'){
+        const noready_task = taskList.querySelectorAll('.task')
+        noready_task.forEach(function(element, index){
+            if(element.classList == 'task ready'){
+                element.remove()
+                if(noready_task[index + 5])
+                    noready_task[index + 5].classList.remove('none')
+                else filtr_noReady()
+            }
+        })
+    }
+    
 }
 
 function delete_task(event){
@@ -122,7 +198,7 @@ function saveINlocalStoradge(){
 }
 
 function addToTask(task_el){
-    if(task_el.text != ''){
+    if(task_el.text != '' && task_el.text != ' '){
         if(task_el.ready == false)
             ready_new = 'task'
         else
@@ -174,11 +250,6 @@ function edit_task(event){
 }
 
 function addTask_edit(event){
-    console.log('я тут')
-    if(inputForm.value.length > 30){
-        alert('Сука слишком длинное слово попробуй еще раз')
-        inputForm.value = ''
-    }
     event.preventDefault();
     if(inputForm.value != ''){
         task[index].text = inputForm.value;
@@ -265,4 +336,25 @@ function pagination_button(task_for_pag){
     }
 
 }
+function readyALL(){
+    const all_task = taskList.querySelectorAll('.task')
+    all_task.forEach(function(item){
+    item.classList.add('ready')
+        task.forEach(function(element){
+            if(element.id == item.id){
+                element.ready = true
+            }
+        })
+    
+    })
+    saveINlocalStoradge();
+    take_is_LC()
+}
+
+function removeALL(){
+    task = []
+    saveINlocalStoradge();
+    take_is_LC()
+}
+
 take_is_LC();
